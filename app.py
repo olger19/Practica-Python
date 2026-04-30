@@ -320,20 +320,31 @@ with tab_single:
         col_vis1, col_vis2 = st.columns(2)
 
         with col_vis1:
-            st.subheader("Visualizacion en tiempo real")
-            viz_placeholder = st.empty()
+            st.subheader("Hill Climbing")
+            hc_viz_placeholder = st.empty()
 
         with col_vis2:
-            st.subheader("Metricas de desempeno")
-            metrics_placeholder = st.empty()
+            st.subheader("Simulated Annealing")
+            sa_viz_placeholder = st.empty()
 
-        def update_ui(current_state, current_fit):
+        st.subheader("Metricas de desempeno")
+        metrics_placeholder = st.empty()
+
+        def update_hc_ui(current_state, current_fit):
             _ = current_fit
-            plot_current_state(current_state, problem, viz_placeholder, problem_type)
+            plot_current_state(current_state, problem, hc_viz_placeholder, problem_type)
+
+        def update_sa_ui(current_state, current_fit):
+            _ = current_fit
+            plot_current_state(current_state, problem, sa_viz_placeholder, problem_type)
 
         st.toast("Ejecutando Hill Climbing...")
         start_hc = time.perf_counter()
-        best_hc, fit_hc, hist_hc = run_hill_climbing(problem, seed_value + 101, callback=update_ui)
+        best_hc, fit_hc, hist_hc = run_hill_climbing(
+            problem,
+            seed_value + 101,
+            callback=update_hc_ui,
+        )
         time_hc = time.perf_counter() - start_hc
 
         st.toast("Ejecutando Simulated Annealing...")
@@ -344,7 +355,7 @@ with tab_single:
             alpha,
             t_min,
             seed_value + 101,
-            callback=update_ui,
+            callback=update_sa_ui,
         )
         time_sa = time.perf_counter() - start_sa
 
@@ -371,7 +382,8 @@ with tab_single:
             else:
                 st.info("Ambos algoritmos llegaron al mismo resultado.")
 
-        plot_current_state(best_sa, problem, viz_placeholder, problem_type)
+        plot_current_state(best_hc, problem, hc_viz_placeholder, problem_type)
+        plot_current_state(best_sa, problem, sa_viz_placeholder, problem_type)
 
         st.divider()
         st.subheader("Analisis de convergencia")
