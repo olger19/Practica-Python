@@ -477,12 +477,6 @@ with tab_benchmark:
             ax_time.legend()
             st.pyplot(fig_time)
 
-            winner_counts = (
-                benchmark_df.groupby(["n", "Ganador"]).size().unstack(fill_value=0).sort_index()
-            )
-            st.write("### Ganador por n")
-            st.bar_chart(winner_counts)
-
 with tab_hyper:
     st.subheader("Analisis de hiperparametros de Simulated Annealing")
     st.caption(
